@@ -10,9 +10,9 @@ public class BulletImpact : WMonobehaviour
     [SerializeField] protected SphereCollider sphereCollider;
     [SerializeField] protected Rigidbody _rigidbody;
 
-    protected override void LoadComponent()
+    protected override void LoadComponents()
     {
-        base.LoadComponent();
+        base.LoadComponents();
         this.LoadCollider();
         this.LoadRigidbody();
     }
@@ -34,9 +34,8 @@ public class BulletImpact : WMonobehaviour
     }
     protected virtual void OnTriggerEnter(Collider other)
     {
-        BulletSpawner.Instance.Despawn(transform.parent);
-        Transform smoke = FXSpawner.Instance.Spawn(FXSpawner.impactOne, transform.position, transform.rotation);
-        smoke.gameObject.SetActive(true);
+        BulletController.Instance.BulletDespawn(transform.parent);
+        FXController.Instance.SpawnFXImpact(transform.position, transform.rotation);
     }
 
 }

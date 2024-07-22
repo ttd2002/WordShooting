@@ -9,7 +9,7 @@ public class Spawner : WMonobehaviour
     [SerializeField] protected List<Transform> poolObjs;
 
 
-    protected override void LoadComponent()
+    protected override void LoadComponents()
     {
         this.LoadPrefabs();
         this.LoadHolder();

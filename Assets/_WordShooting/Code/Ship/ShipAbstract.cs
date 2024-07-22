@@ -4,17 +4,17 @@ using UnityEngine;
 
 public abstract class ShipAbstract : WMonobehaviour
 {
-    [SerializeField] protected ShipCtrl shipCtrl;
-    public ShipCtrl ShipCtrl { get => shipCtrl; }
-    protected override void LoadComponent()
+    [SerializeField] protected ShipController shipController;
+    public ShipController ShipController { get => shipController; }
+    protected override void LoadComponents()
     {
-        base.LoadComponent();
-        this.LoadShipCtrl();
+        base.LoadComponents();
+        this.LoadShipController();
     }
-    protected virtual void LoadShipCtrl()
+    protected virtual void LoadShipController()
     {
-        if (this.shipCtrl != null) return;
-        this.shipCtrl = transform.parent.GetComponent<ShipCtrl>();
-        Debug.Log(transform.name + ": LoadShipCtrl", gameObject);
+        if (this.shipController != null) return;
+        this.shipController = transform.parent.GetComponent<ShipController>();
+        Debug.Log(transform.name + ": LoadShipController", gameObject);
     }
 }

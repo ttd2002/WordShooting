@@ -6,7 +6,7 @@ public class WordDespawn : DespawnByDistance
 {
     protected override void DespawnObject()
     {
-        ShipShooting.Instance.ResetTarget();
+        ShipController.Instance.ShipShooting.ResetTarget();
         WordSpawner.Instance.Despawn(transform.parent);
     }
    

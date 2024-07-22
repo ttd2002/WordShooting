@@ -6,15 +6,15 @@ public class WMonobehaviour : MonoBehaviour
 {
     protected virtual void Reset()
     {
-        this.LoadComponent();
+        this.LoadComponents();
         this.ResetValue();
 
     } 
     protected virtual void Awake()
     {
-        this.LoadComponent();
+        this.LoadComponents();
     }
-    protected virtual void LoadComponent()
+    protected virtual void LoadComponents()
     {
         //for override
     }

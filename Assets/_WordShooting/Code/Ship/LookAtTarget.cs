@@ -5,18 +5,8 @@ public class LookAtTarget : ShipAbstract
 {
     [SerializeField] protected List<Transform> textObjects;
 
-    protected virtual void Update()
-    {
-        this.FillTextObjects();
-        this.RemoveTextObject();
-        Transform closestTextObject = this.GetShortestDistance();
-        if (closestTextObject != null)
-        {
-            this.LookAtToTarget(closestTextObject);
-        }
-    }
 
-    protected virtual void FillTextObjects()
+    public virtual void FillTextObjects()
     {
         foreach (Transform textObject in WordSpawner.Instance.GetHolder())
         {
@@ -27,7 +17,7 @@ public class LookAtTarget : ShipAbstract
         }
     }
 
-    protected virtual void RemoveTextObject()
+    public virtual void RemoveTextObject()
     {
         List<Transform> objectsToRemove = new List<Transform>();
 
@@ -64,10 +54,11 @@ public class LookAtTarget : ShipAbstract
         return closestTextObject;
     }
 
-    protected virtual void LookAtToTarget(Transform closestTextObject)
+    public virtual void LookAtToTarget(Transform closestTextObject)
     {
-        Vector3 direction = closestTextObject.position - this.shipCtrl.Model.position;
+        Vector3 direction = closestTextObject.position - this.shipController.GetModelTransform().position;
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        this.shipCtrl.Model.rotation = Quaternion.Euler(new Vector3(0, 0, angle + 90));
+        this.shipController.GetModelTransform().rotation = Quaternion.Euler(new Vector3(0, 0, angle + 90));
     }
+    
 }

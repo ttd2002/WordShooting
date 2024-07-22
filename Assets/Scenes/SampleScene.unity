@@ -199,7 +199,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c276349b12991c449b0f0e68242fecb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shipCtrl: {fileID: 430640774}
+  shipController: {fileID: 0}
   textObjects: []
 --- !u!1 &308452762
 GameObject:
@@ -307,11 +307,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 430640772}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 91ebb1d339b7ccb43bf3306ca67acff3, type: 3}
+  m_Script: {fileID: 11500000, guid: 4007e235e86dcf94a821ca2b7e4aa410, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  model: {fileID: 888945735259909035}
+  model: {fileID: 888945735259909036}
   lookAtTarget: {fileID: 140109360}
+  shipShooting: {fileID: 1170488862}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -851,10 +852,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 738517234ba14ad4d9cd97fa574e16df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shipCtrl: {fileID: 430640774}
+  shipController: {fileID: 0}
   currentCharIndex: 0
   currentTarget: 
-  modelTrans: {fileID: 888945735259909035}
 --- !u!4 &1214820202 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1970739325850426350, guid: 9639af8812d6e0f4b95515e8313927f6, type: 3}
@@ -943,10 +943,10 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 627441246}
   - {fileID: 1694450312}
   - {fileID: 1031885924}
   - {fileID: 308452763}
+  - {fileID: 627441246}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1407171663
@@ -989,10 +989,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1477457651}
-  - component: {fileID: 1477457654}
   - component: {fileID: 1477457653}
   - component: {fileID: 1477457652}
   - component: {fileID: 1477457655}
+  - component: {fileID: 1477457656}
   m_Layer: 0
   m_Name: WordSpawner
   m_TagString: Untagged
@@ -1045,23 +1045,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b57a96d7c8a8af64381d8c5aa25e9067, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wordCtrl: {fileID: 1477457654}
-  spawnTime: 3
---- !u!114 &1477457654
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1477457650}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a2c9beaba8c280419a2dc1bc24b0bf6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  wordSpawner: {fileID: 1477457652}
-  spawnPoint: {fileID: 1359092527}
-  randomWordFetcher: {fileID: 1477457655}
+  wordController: {fileID: 1477457656}
+  spawnDelay: 3
+  spawnTimer: 0
 --- !u!114 &1477457655
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1074,6 +1060,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9b61e9facd0e7f45be239e3a3cfa12d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1477457656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1477457650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e46e7b159b5aca8498314871617b5a97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wordSpawner: {fileID: 1477457652}
+  spawnPoint: {fileID: 1359092527}
+  randomWordFetcher: {fileID: 1477457655}
+  wordRandom: {fileID: 1477457653}
 --- !u!1 &1636261601
 GameObject:
   m_ObjectHideFlags: 0
@@ -1146,6 +1148,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1686940447}
   - component: {fileID: 1686940446}
+  - component: {fileID: 1686940448}
   m_Layer: 0
   m_Name: BulletSpawner
   m_TagString: Untagged
@@ -1186,6 +1189,18 @@ Transform:
   - {fileID: 1641972336}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1686940448
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1686940445}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f48a1d1d3451ec48aaf6443d3c50343, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1691976391
 GameObject:
   m_ObjectHideFlags: 0
@@ -1322,6 +1337,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2053180536}
   - component: {fileID: 2053180535}
+  - component: {fileID: 2053180537}
   m_Layer: 0
   m_Name: FXSpawner
   m_TagString: Untagged
@@ -1363,6 +1379,18 @@ Transform:
   - {fileID: 1407171664}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2053180537
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2053180534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d6273f54c0643c4ea06b6bcf8e411e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &282144251816308954
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1413,13 +1441,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2646439882673095463, guid: 7d495d090087971478532ef0d67e9eb8, type: 3}
       propertyPath: m_Name
-      value: Model
+      value: ShipModel
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2646439882673095463, guid: 7d495d090087971478532ef0d67e9eb8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 888945735259909036}
   m_SourcePrefab: {fileID: 100100000, guid: 7d495d090087971478532ef0d67e9eb8, type: 3}
+--- !u!1 &282144251816308955 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2646439882673095463, guid: 7d495d090087971478532ef0d67e9eb8, type: 3}
+  m_PrefabInstance: {fileID: 282144251816308954}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &390374666391210461
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1539,6 +1575,19 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1591772506443957649, guid: 7d495d090087971478532ef0d67e9eb8, type: 3}
   m_PrefabInstance: {fileID: 282144251816308954}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &888945735259909036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 282144251816308955}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c42176c4d1001b40b8da27e37143cc2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shipController: {fileID: 430640774}
 --- !u!1001 &1904553304789485221
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1592,7 +1641,8 @@ PrefabInstance:
       value: Bullet_1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 5159359049087370189, guid: cee8a856ae47b5f4fbacdb5f78e75b2f, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cee8a856ae47b5f4fbacdb5f78e75b2f, type: 3}

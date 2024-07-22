@@ -4,64 +4,21 @@ using UnityEngine;
 using TMPro;
 using System.Linq;
 
-public class WordRandom : WMonobehaviour
+public class WordRandom : WordAbstract
 {
-    [SerializeField] protected WordCtrl wordCtrl;
-    [SerializeField] protected float spawnTime = 3f;
-    protected override void LoadComponent()
+    [SerializeField] protected float spawnDelay = 3f;
+    [SerializeField] protected float spawnTimer = 0; 
+    public virtual void WordSpawning(string randomText,Vector3 spawnPos)
     {
-        base.LoadComponent();
-        this.LoadWordCtrl();
-    }
+        this.spawnTimer += Time.fixedDeltaTime;
+        if (this.spawnTimer < this.spawnDelay) return;
+        this.spawnTimer = 0;
 
-    protected virtual void LoadWordCtrl()
-    {
-        if (this.wordCtrl != null) return;
-        this.wordCtrl = GetComponent<WordCtrl>();
-        Debug.Log(transform.name + ": LoadWordCtrl", gameObject);
-    }
-
-
-    protected override void Start()
-    {
-        this.StartCoroutine(FetchRandomWordsAndUseThem());
-        this.WordSpawning();
-    }
-    protected virtual IEnumerator FetchRandomWordsAndUseThem()
-    {
-        yield return wordCtrl.RandomWordFetcher.FetchRandomWordsAndParagraphsOnce(OnRandomWordsReceived, OnParagraphsReceived, 100);
-
-    }
-    protected virtual void OnRandomWordsReceived(string[] words)
-    {
-        if (words == null) return;
-        Debug.Log("Fetched " + words.Length + " random words.");
-
-    }
-    protected virtual void OnParagraphsReceived(List<string> paragraphs)
-    {
-        if (paragraphs == null) return;
-        Debug.Log("Fetched " + paragraphs.Count + " paragraphs.");
-    }
-    protected virtual void WordSpawning()
-    {
-        Transform ranPoint = this.wordCtrl.SpawnPoint.GetRandom();
-        Vector3 pos = ranPoint.position;
         Quaternion rot = transform.rotation;
-        Transform obj = this.wordCtrl.WordSpawner.Spawn(WordSpawner.textOne, pos, rot);
-        string randomText;
-        if (GetParagraph())
-        {
-            randomText = wordCtrl.RandomWordFetcher.GetRandomParagraph();
-        }
-        else
-        {
-            randomText = wordCtrl.RandomWordFetcher.GetRandomWord();
-        }
+        Transform obj = this.wordController.WordSpawner.Spawn(WordSpawner.textOne, spawnPos, rot);
         TextMeshPro textComponent = obj.gameObject.GetComponentInChildren<TextMeshPro>();
         textComponent.text = randomText;
         obj.gameObject.SetActive(true);
-        Invoke(nameof(this.WordSpawning), spawnTime);
     }
 
     protected virtual bool GetParagraph()

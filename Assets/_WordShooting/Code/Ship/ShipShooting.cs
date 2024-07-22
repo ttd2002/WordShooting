@@ -5,41 +5,13 @@ using TMPro;
 
 public class ShipShooting : ShipAbstract
 {
-    private static ShipShooting instance;
-    public static ShipShooting Instance { get => instance; }
-    protected override void Awake()
-    {
-        base.Awake();
-        if (ShipShooting.instance != null) Debug.LogError("Only 1 ShipShooting allow to exist");
-        ShipShooting.instance = this;
-    }
-
     [SerializeField] protected int currentCharIndex = 0;
     [SerializeField] protected string currentTarget = "";
-    [SerializeField] protected Transform modelTrans;
     protected TextMeshPro targetTextComponent;
-
     private List<Transform> bullets = new List<Transform>();
 
-    protected virtual void Update()
+    public virtual void CheckKeyInput(Transform targetTextTransform)
     {
-        this.CheckKeyInput();
-    }
-
-    protected override void ResetValue()
-    {
-        base.ResetValue();
-        this.GetModelTrans();
-    }
-
-    protected virtual void GetModelTrans()
-    {
-        modelTrans = this.shipCtrl.Model.transform;
-    }
-
-    protected virtual void CheckKeyInput()
-    {
-        Transform targetTextTransform = this.shipCtrl.LookAtTarget.GetShortestDistance();
         if (targetTextTransform != null)
         {
             if (this.targetTextComponent == null)
@@ -64,8 +36,7 @@ public class ShipShooting : ShipAbstract
 
                     if (this.currentCharIndex >= this.currentTarget.Length)
                     {
-                        Transform smoke = FXSpawner.Instance.Spawn(FXSpawner.smokeOne, targetTextTransform.position, targetTextTransform.rotation);
-                        smoke.gameObject.SetActive(true);
+                        this.FinishTextEffect(targetTextTransform);
                         WordSpawner.Instance.Despawn(targetTextTransform);
                         this.ResetTarget();
                     }
@@ -85,38 +56,36 @@ public class ShipShooting : ShipAbstract
         this.targetTextComponent = null;
         this.currentTarget = "";
 
-        foreach (var bullet in bullets)
+        foreach (Transform bullet in bullets)
         {
             BulletSpawner.Instance.Despawn(bullet.transform);
         }
-        bullets.Clear();
+        this.bullets.Clear();
     }
 
     protected virtual void Shooting()
     {
-        Vector3 spawnPos = modelTrans.position;
-        Quaternion rotation = modelTrans.parent.rotation;
-        Transform newPrefab = BulletSpawner.Instance.Spawn(BulletSpawner.BulletOne, spawnPos, rotation);
+        Vector3 spawnPos = this.shipController.GetModelTransform().position;
+        Quaternion rotation = this.shipController.GetModelTransform().parent.rotation;
+        Vector3 direction = GetDirection();
+        Transform newPrefab = BulletController.Instance.SpawnBullet(spawnPos, rotation,direction);
         if (newPrefab == null) return;
         newPrefab.gameObject.SetActive(true);
-        
-        bullets.Add(newPrefab);
 
-        Vector3 direction = GetDirection();
-        BulletFly bulletFly = newPrefab.GetComponentInChildren<BulletFly>();
-        if (bulletFly != null)
-        {
-            bulletFly.SetDirection(direction);
-        }
+        this.bullets.Add(newPrefab);
     }
 
     public virtual Vector3 GetDirection()
     {
-        Transform targetTextTransform = this.shipCtrl.LookAtTarget.GetShortestDistance();
+        Transform targetTextTransform = this.shipController.LookAtTarget.GetShortestDistance();
         if (targetTextTransform == null) return Vector3.zero;
-        Vector3 spawnPos = modelTrans.position;
+        Vector3 spawnPos = this.shipController.GetModelTransform().position;
         Vector3 targetPos = targetTextTransform.position;
         Vector3 direction = (targetPos - spawnPos).normalized;
         return direction;
+    }
+    protected virtual void FinishTextEffect(Transform targetTextTransform)
+    {
+        FXController.Instance.SpawnFXSmoke(targetTextTransform.position, targetTextTransform.rotation);
     }
 }

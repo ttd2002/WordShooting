@@ -6,9 +6,9 @@ public abstract class SpawnPoints : WMonobehaviour
 {
     [SerializeField] protected List<Transform> points;
 
-    protected override void LoadComponent()
+    protected override void LoadComponents()
     {
-        base.LoadComponent();
+        base.LoadComponents();
         this.LoadPoints();
     }
 
