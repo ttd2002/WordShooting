@@ -25,14 +25,21 @@ public class WordController : WMonobehaviour
     protected virtual void FixedUpdate()
     {
         WordModel wordModel = GetWordModel();
-        this.wordRandom.WordSpawning(wordModel.GetText(), wordModel.GetSpawnPos());
+        this.wordRandom.WordSpawning(wordModel);
     }
 
     protected virtual WordModel GetWordModel()
     {
-        string randomText = GetParagraph() ? this.randomWordFetcher.GetRandomParagraph() : this.randomWordFetcher.GetRandomWord();
+        string randomText = this.randomWordFetcher.GetRandomWord();
+        bool isSentence = false;
+        if (this.GetParagraph())
+        {
+            randomText = this.randomWordFetcher.GetRandomParagraph();
+            isSentence = true;
+        }
         Vector3 spawnPos = this.spawnPoint.GetRandom().position;
-        return new WordModel(randomText, spawnPos);
+        
+        return new WordModel(randomText, spawnPos, isSentence);
     }
 
     protected virtual bool GetParagraph()

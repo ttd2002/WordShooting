@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Unity.VisualScripting;
 
 public class ShipShooting : ShipAbstract
 {
@@ -32,19 +33,36 @@ public class ShipShooting : ShipAbstract
                 {
                     this.currentCharIndex++;
                     this.Shooting();
-                    HighlightTypedText(this.targetTextComponent);
+                    this.HighlightTypedText(this.targetTextComponent);
 
                     if (this.currentCharIndex >= this.currentTarget.Length)
                     {
                         this.FinishTextEffect(targetTextTransform);
-                        WordSpawner.Instance.Despawn(targetTextTransform);
+                        this.DespawnBullet(targetTextTransform);
                         this.ResetTarget();
+                        this.AddScore(targetTextTransform);
                     }
                 }
             }
         }
     }
+    protected virtual void AddScore(Transform targetTextTransform)
+    {
+        WordType wordType = targetTextTransform.GetComponentInChildren<WordType>();
+        if (!wordType.IsSentence)
+        {
+            ScoreManager.Instance.AddWordScore();
+        }
+        else
+        {
+            ScoreManager.Instance.AddSentenceScore();
+        }
+    }
+    protected virtual void DespawnBullet(Transform targetTextTransform)
+    {
+        WordSpawner.Instance.Despawn(targetTextTransform);
 
+    }
     protected virtual void HighlightTypedText(TextMeshPro targetTextComponent)
     {
         targetTextComponent.text = "<color=green>" + currentTarget.Substring(0, this.currentCharIndex) + "</color>" + this.currentTarget.Substring(this.currentCharIndex);

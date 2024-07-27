@@ -8,22 +8,26 @@ public class WordRandom : WordAbstract
 {
     [SerializeField] protected float spawnDelay = 3f;
     [SerializeField] protected float spawnTimer = 0; 
-    public virtual void WordSpawning(string randomText,Vector3 spawnPos)
+    public virtual void WordSpawning(WordModel wordModel)
     {
         this.spawnTimer += Time.fixedDeltaTime;
         if (this.spawnTimer < this.spawnDelay) return;
         this.spawnTimer = 0;
 
         Quaternion rot = transform.rotation;
-        Transform obj = this.wordController.WordSpawner.Spawn(WordSpawner.textOne, spawnPos, rot);
+        Transform obj = this.wordController.WordSpawner.Spawn(WordSpawner.textOne, wordModel.GetSpawnPos(), rot);
+        WordType wordType = obj.gameObject.GetComponentInChildren<WordType>();
+        if (wordModel.GetIsSentence())
+        {
+            wordType.SetIsSentence();
+        }
+        else
+        {
+            wordType.SetIsWord();
+        }
         TextMeshPro textComponent = obj.gameObject.GetComponentInChildren<TextMeshPro>();
-        textComponent.text = randomText;
+        textComponent.text = wordModel.GetText();
         obj.gameObject.SetActive(true);
     }
 
-    protected virtual bool GetParagraph()
-    {
-        int randomValue = Random.Range(0, 4);
-        return randomValue == 0;
-    }
 }
